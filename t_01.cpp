@@ -363,7 +363,34 @@ void LeeCelda(unsigned int & fil, unsigned int & col)
             
 void AbreCelda(Tablero tab, unsigned int i, unsigned int j) 
 {
-   // completar    
+    unsigned int c = 0, C = 0;
+	/*	if(i < 0)
+			i = 0;
+		else if(i > 7) 
+			i = 7;
+			
+		if(j < 0)
+			j = 0;
+		else if(j > 7) 
+			j = 7;
+	*/		
+  
+   if(tab[i][j].nMinas == 0)
+   {
+		for(c = i -1; c <= i +1; c++)
+		{
+			for(C = j -1; C <= j +1; C++)
+			{
+				AbreCelda(tab, c, C);
+				tab[c][C].destapada = true; 
+			}
+		}
+	   		
+   }
+   else
+	tab[i][j].destapada = true; 
+		
+	return;	
 }
 
 bool FinJuego(const Tablero tab) 
