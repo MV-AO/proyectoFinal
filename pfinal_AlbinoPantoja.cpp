@@ -175,7 +175,28 @@ Jugador LeeInfoJugador(unsigned int n)
 
 void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f) 
 {
-   // completar  
+    //Verificar si t siempre es  al llamar la función o empieza siendo > 0.
+   
+   getline(f, vec[t].nom);
+   f >> vec[t].nac.dia;
+   f >> vec[t].nac.mes;
+   f >> vec[t].nac.anyo;
+   f >> vec[t].jugadas;
+   
+   t++;
+   
+   while(!f.eof())
+   {
+   		getline(f, vec[t].nom);
+   		f >> vec[t].nac.dia;
+  		f >> vec[t].nac.mes;
+   		f >> vec[t].nac.anyo;
+   		f >> vec[t].jugadas;
+   
+  		t++;
+   }
+   
+   return;
 }
 
 bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t) 
@@ -215,12 +236,11 @@ void MuestraTablero(const Tablero tab)
 /*********** Funciones del Juego **********/
 void LeeCelda(unsigned int & fil, unsigned int & col)
 {
-   // completar    
+   // completar 
 }
             
 void AbreCelda(Tablero tab, unsigned int i, unsigned int j) 
 {
-   // completar    
 }
 
 bool FinJuego(const Tablero tab) 
