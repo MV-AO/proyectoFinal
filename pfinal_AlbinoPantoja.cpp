@@ -37,6 +37,7 @@ typedef Estado Tablero[FIL][COL];
 
 
 char Menu();
+void MenuEscribir();
 //funciones de inicializacion
 void InicializaDesdeFichero(Tablero, ifstream &);
 void InicializaAleatoriamente(Tablero);
