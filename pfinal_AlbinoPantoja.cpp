@@ -224,7 +224,15 @@ void AbreCelda(Tablero tab, unsigned int i, unsigned int j)
 
 bool FinJuego(const Tablero tab) 
 {
-   // completar
+   bool finM, finA, end = false;
+   
+   finM = MinaAbierta(tab);
+   finA = TodasCeldasProcesadas(tab);
+   
+   if(finM == true || finA == true)
+   	end = true;
+   	
+	return end;
 }
 
 unsigned int NumeroMinasVecinas(const Tablero tab, unsigned int i, unsigned int j) 
