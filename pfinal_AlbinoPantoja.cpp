@@ -230,7 +230,14 @@ bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t)
 
 void EscribeJugadoresFichero(const Vector vec, unsigned int t, ofstream & f) 
 {
-    // completar      
+    	for(unsigned int i = 0; i < t; i++)
+	{
+		f << vec[0].nom << endl;
+		f << vec[0].nac.dia << " " << vec[0].nac.mes << " " << vec[0].nac.anyo << endl;
+   		f << vec[0].jugadas << endl;
+	}
+	
+   return;      
 }
 
 /****** Funcion Menu ***********/
