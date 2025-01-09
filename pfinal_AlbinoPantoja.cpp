@@ -211,7 +211,21 @@ void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f)
 
 bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t) 
 {
-   // completar  
+   	bool bien = true;
+	t++;
+	
+	if(t > MAX_JUGADORES)
+		bien = false;
+	else
+	{
+		vec[t].nom = a.nom;
+   		vec[t].nac.dia = a.nac.dia;
+   		vec[t].nac.mes = a.nac.mes;
+   		vec[t].nac.anyo = a.nac.anyo;
+   		vec[t].jugadas = a.jugadas;
+	}
+   	
+   	return bien;  
 }
 
 void EscribeJugadoresFichero(const Vector vec, unsigned int t, ofstream & f) 
