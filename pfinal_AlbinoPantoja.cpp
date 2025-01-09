@@ -251,5 +251,23 @@ bool MinaAbierta(const Tablero tab)
 
 bool TodasCeldasProcesadas(const Tablero tab) 
 {
-    // completar
+    unsigned int i, j, m = 0, n = 0;
+    bool all = false;
+    
+    for(i = 0; i < FIL; i++)
+    {
+    	for(j = 0; j < COL; j++)
+    	{
+    		if(tab[i][j].mina == true && tab[i][j].bandera == true)
+    			m++;
+    			
+    		if(tab[i][j].mina == false && tab[i][j].destapada == false)
+    			n++;
+		}
+	}
+	
+	if(m == 8 && n == 0)
+		all = true;
+	
+	return all;
 }
