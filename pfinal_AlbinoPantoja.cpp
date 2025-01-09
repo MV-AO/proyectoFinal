@@ -170,7 +170,17 @@ int main()
 // Funciones del Jugador
 Jugador LeeInfoJugador(unsigned int n)
 {      
-  //completar
+  	Jugador p;
+	
+  	cout << "Por favor ingrese sus datos." << endl;
+  	cout << "Nombre: " << endl;
+  	getline(cin, p.nom);
+  	cout << "Fecha de nacimiento: " << endl;
+  	cin >> p.nac.dia >> p.nac.mes >> p.nac.anyo;
+  	
+  	p.jugadas = n;
+  	
+  	return p;
 }   
 
 void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f) 
