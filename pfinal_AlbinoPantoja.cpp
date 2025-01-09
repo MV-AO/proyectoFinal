@@ -234,7 +234,19 @@ unsigned int NumeroMinasVecinas(const Tablero tab, unsigned int i, unsigned int 
 
 bool MinaAbierta(const Tablero tab) 
 {    
-    // completar
+    unsigned int i, j;
+    bool boom = false;
+    
+    for(i = 0; i < FIL; i++)
+    {
+    	for(j = 0; j < COL; j++)
+    	{
+    		if(tab[i][j].mina == true && tab[i][j].destapada == true)
+    			boom = true;
+		}
+	}
+	
+	return boom;
 }
 
 bool TodasCeldasProcesadas(const Tablero tab) 
