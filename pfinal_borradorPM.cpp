@@ -250,7 +250,8 @@ int main()
 	      }   
 	   }while(fOut.fail());
    }
-
+   
+   system("PAUSE");
    return 0;
 }
 
