@@ -1,3 +1,20 @@
+/**
+ *
+ * @file pfinal_borradorPM.cpp
+ *
+ * @brief 
+ *
+ * Juego de las minas.
+ * 
+ *
+ * @version 1.0
+ * @author Maria Victoria Albino Oviedo
+ * @author Paula Pantoja
+ * @date 11-01-2025
+ *
+ * @copyright Universidad de Valencia
+ */
+
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>   
@@ -11,21 +28,69 @@ const int FIL = 8;
 const int COL = 8;
 
 //info de los jugadores
+/** 
+ * 
+ * @struct Fecha
+ * Registro para guardar la información de una Fecha
+ *
+ * @var Fecha::dia
+ * Almacena el dia
+ * @var Fecha::mes
+ * Almacena el mes
+ * @var Fecha::anyo
+ * Almacena el año
+ */
 struct Fecha 
 {
 	unsigned short dia, mes, anyo;
 };
 
+/** 
+ * 
+ * @struct Jugador
+ * Registro para guardar la información de un jugador.
+ *
+ * @var Jugador::nombre
+ * Almacena el nombre del jugador.
+ * @var Jugador::nac
+ * Almacena la fecha de nacimiento del jugador con un formato de dd/mm/aaaa.
+ * @var Jugador::PartidasJugadas
+ * Almacena el numero de PartidasJugadas realizadas.
+ * @var Jugador::intentos
+ * Almacena el numero de intentos disponibles.
+ */
 struct Jugador
 {
    string nombre;
+   Fecha nac;
    unsigned int PartidasJugadas;
               
 };
 
 const int MAX_JUGADORES = 100;
+
+/**
+*
+* @brief Definicion de tipo de dato Vector de tamaño 100 elementos de tipo Jugador.
+*
+* @typedef Vector
+*/
 typedef Jugador Vector[MAX_JUGADORES];
 
+/** 
+ * 
+ * @struct Estado
+ * Registro para guardar la información de una celda.
+ *
+ * @var Estado::nMinas
+ * Almacena el numero de bombas vecinas.
+ * @var Estado::mina
+ * Comprueba si existe una mina en esa celda.
+ * @var Estado::destapada
+ * Comprueba si la celda está descubierta ya o no.
+ * @var Estado::bandera
+ * Comprueba si la celda está marcada con una bandera o no.
+ */
 struct Estado
 {
 	unsigned int nMinas; // numero de bombas vecinas
@@ -34,6 +99,12 @@ struct Estado
 	bool bandera; //la celda está marcada con una bandera o no
 };
 
+/**
+*
+* @brief Definicion de tipo de dato Tablero de tamaño 8x8 elementos de tipo Estado.
+*
+* @typedef Tablero
+*/
 typedef Estado Tablero[FIL][COL];
 
 
@@ -76,6 +147,8 @@ int main()
     unsigned int tam = 0; //numero de elementos rellenados del vector
     string fichNombre;
     
+    cout << "Bienvenido al juego del buscaminas. " << endl;
+    
     do 
     {
        op = Menu();
@@ -83,8 +156,9 @@ int main()
        { 
     
          case 'a': 
-        	   cout << "Fichero con las posiciones de las minas?: " << endl;
+        	   cout << "Nombre del fichero con las posiciones de las minas?: " << endl;
         	   cin >> fichNombre;
+        	   cout << endl;
 			   fIn.open(fichNombre.c_str());
         	   
              if (fIn.fail())
@@ -116,21 +190,22 @@ int main()
             tab[x][y].bandera = false;               
             break;
        }
+       system("CLS");
        MuestraTablero(tab); 
     } 
     while (FinJuego(tab) == false); 
     
   
     if  (MinaAbierta(tab) == true)
-       cout << endl << "Fin Juego. Mina ha explotado!" << endl;
+       cout << endl << "Fin del Juego. Una mina ha explotado!" << endl;
     else 
-       cout << endl << "Fin Juego. Victoria!" << endl; 
+       cout << endl << "Fin del Juego. Victoria!" << endl; 
 
     cout << "Numero de Intentos: " << nIntentos << endl;
 
     if (TodasCeldasProcesadas(tab) == true ) 
 	{ 
-       cout << "Fichero para leer la información jugadores?: " << endl;
+       cout << "Nombre del fichero para leer la informacion jugadores?: " << endl;
        cin >> fichNombre;
 
        f.open(fichNombre.c_str());
@@ -150,7 +225,7 @@ int main()
       else 
          cout << "Jugador insertado correctamente." << endl;
        
-      cout << "Fichero para guardar la información jugadores?: " << endl; 
+      cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
       cin >> fichNombre;
 	  fOut.open(fichNombre.c_str());
       
@@ -167,6 +242,14 @@ int main()
 }
 
 // Funciones del Jugador
+/**
+ *
+ * Rellena un tipo Jugador con los datos del usuario actual.
+ *
+ * @param [in] n numero de intentos.
+ *
+ *@return el jugador con sus datos rellenados.
+ */
 Jugador LeeInfoJugador(unsigned int n)
 {      
 	Jugador p;
@@ -187,7 +270,16 @@ Jugador LeeInfoJugador(unsigned int n)
   	return p;
 }   
 
-void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f) 
+/**
+ *
+ * Rellena un vector con los jugadores que han ganado desde un fichero.
+ *
+ * @param [in] f fichero con la informacion para rellenar el vector.
+ * @param [out] vec vector con los jugadores.
+ * @param [out] t numero de vectores realmente utilizados.
+ *
+ */
+void LeeJugadoresFichero(Vector vec, unsigned int & t, ifstream & f) 
 {
     getline(f, vec[t].nombre);
    f >> vec[t].nac.dia;
@@ -213,6 +305,16 @@ void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f)
    return; 
 }
 
+/**
+ *
+ * Comprueba si es posible rellenar el vector con un jugador más. Si es cierto, realizará esta operación.
+ *
+ * @param [in] a jugador a agregar.
+ * @param [in, out] vec vector con los jugadores.
+ * @param [in, out] t numero de vectores realmente utilizados.
+ *
+ *@return si es posible o no agregar al jugador.
+ */
 bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t) 
 {
    	bool bien = true;
@@ -233,6 +335,15 @@ bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t)
    	return bien;  
 }
 
+/**
+ *
+ * Escribe los datos de los jugadpores guardados en un fichero.
+ *
+ * @param [in] vec vector con los jugadores.
+ * @param [in] t numero de vectores realmente utilizados.
+ * @param [in] f fichero de salida.
+ *
+ */
 void EscribeJugadoresFichero(const Vector vec, unsigned int t, ofstream & f) 
 {
     for(unsigned int i = 0; i < t; i++)
@@ -246,6 +357,13 @@ void EscribeJugadoresFichero(const Vector vec, unsigned int t, ofstream & f)
 }
 
 /****** Funcion Menu ***********/
+/**
+ *
+ * Muestra el menu y devuelve la opcion seleccionada por el usuario.
+ *
+ * @return la letra de la opción seleccionada.
+ *
+ */
 char Menu() 
 {
 	char op;
@@ -254,13 +372,14 @@ char Menu()
 		cout << "a. Lee las posiciones de las minas desde fichero." << endl;
 		cout << "b. Genera aleatoriamente las posiciones de las minas." << endl;
 		cout << "c. Descubre celda." << endl;
-		cout << "d. Marca celda como una mina. Añade una bandera." << endl;
+		cout << "d. Marca celda como una mina. Anyade una bandera." << endl;
 		cout << "e. Desmarca celda como una mina." << endl;
-		cout << "Escoge una opción del menú: ";
+		cout << "Escoge una opcion del menu: ";
 		cin >>	op;
+		cout << endl;
 		
 		if(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e')
-			cout << "Ingresa otro carácter valido." << endl;
+			cout << "Ingresa otro caracter valido." << endl;
 	}
 	while(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e');
 	
@@ -268,6 +387,14 @@ char Menu()
 }
 
 /******* Funciones de Inicializacion *******/
+/**
+ *
+ * Inicializa el tablero a partir de la información de un fichero.
+ *
+ * @param [in] f fichero con la información.
+ * @param [out] tab tablero con la información de cada celda rellenado.
+ *
+ */
 void InicializaDesdeFichero(Tablero tab, ifstream & f) 
 {
 	unsigned int i, j;
@@ -287,24 +414,32 @@ void InicializaDesdeFichero(Tablero tab, ifstream & f)
 	while(!f.eof());
 	
 	for(i = 0; i < FIL; i++)
-	{
 		for(j = 0; j < COL; j++)
-		{
 			tab[i][j].nMinas = NumeroMinasVecinas(tab, i, j);
-			cout << tab[i][j].nMinas << " ";
-		}
-		cout << endl;
-	}
-	
+			
 	f.close();
 	return;
 }
 	
-
+/**
+ *
+ * Inicializa el tablero de forma aleatorio con un maximo de 8 minas.
+ *
+ * @param [out] tab tablero con la información de cada celda rellenado.
+ *
+ */
 void InicializaAleatoriamente(Tablero tab) 
 {
-	unsigned int x, y;
+	unsigned int x, y, m;
 	srand(time(NULL)); 
+
+	for(unsigned int i = 0; i < FIL; i++)
+		for(unsigned int j = 0; j < COL; j++)
+		{
+			tab[i][j].mina = false;
+			tab[i][j].destapada = false;
+			tab[i][j].bandera = false;
+		}
 	
     for(unsigned int i = 0; i < MAX_MINAS; i++)
     {
@@ -317,10 +452,22 @@ void InicializaAleatoriamente(Tablero tab)
 		
 		tab[x][y].mina = true;
 	}
+		
+	for(unsigned int i = 0; i < FIL; i++)
+		for(unsigned int j = 0; j < COL; j++)
+			tab[i][j].nMinas = NumeroMinasVecinas(tab, i, j);
+
 	return;	
 }
 
-
+/************** Mostrar Tablero *****************/
+/**
+ *
+ * Muestra eltablero por pantalla.
+ *
+ * @param [in] tab tablero con la información de cada celda rellenado.
+ *
+ */
 void MuestraTablero(const Tablero tab) 
 {
 	for(int i = -1; i < FIL; i++)
@@ -364,11 +511,19 @@ void MuestraTablero(const Tablero tab)
 }
 
 /*********** Funciones del Juego **********/
+/**
+ *
+ * Lee la posicion de la celda que el usuario quiera destapar.
+ *
+ *@param [out] fil numero de fila en la que se encuentra la celda.
+ *@param [out] col numero de columna en la que se encuentra la celda.
+ *
+ */
 void LeeCelda(unsigned int & fil, unsigned int & col)
 {	
 	do
 	{
-	   cout << "Coloque la posición de la celda." << endl << "Fila: ";
+	   cout << "Coloque la posicion de la celda." << endl << "Fila: ";
 	   cin >> fil;
 	   cout << "Columna: ";
 	   cin >> col;   
@@ -383,7 +538,16 @@ void LeeCelda(unsigned int & fil, unsigned int & col)
 	
 	return;
 }
-            
+
+/**
+ *
+ * Abre la celda seleccionada por el jugador y sus vecinas si no tienen bombas a su alredador de forma recursiva.
+ *
+ *@param [in] tab tablero con la información de cada celda rellenado.
+ *@param [in] i numero de fila en la que se encuentra la celda de referencia.
+ *@param [in] j numero de columna en la que se encuentra la celda de referencia.
+ *
+ */    
 void AbreCelda(Tablero tab, int i, int j) 
 {
 	if(tab[i][j].destapada == false)
@@ -404,6 +568,15 @@ void AbreCelda(Tablero tab, int i, int j)
 	return;   
 }
 
+/**
+ *
+ * Comprueba que el juego se haya terminado.
+ *
+ * @param [in] tab tablero de celdas.
+ *
+ * @return si se ha acabado o no el juego.
+ *
+ */
 bool FinJuego(const Tablero tab) 
 {
     bool finM, finA, end = false;
@@ -417,20 +590,38 @@ bool FinJuego(const Tablero tab)
 	return end;
 }
 
+/**
+ *
+ * Calcula la cantidad de minas existentes en las celdas vecinas a una determinada.
+ *
+ *@param [in] tab tablero de celdas.
+ *@param [in] i numero de fila en la que se encuentra la celda de referencia.
+ *@param [in] j numero de columna en la que se encuentra la celda de referencia.
+ *
+ * @return la cantidad de minas a su alrededor.
+ *
+ */
 unsigned int NumeroMinasVecinas(const Tablero tab, int i, int j) 
 {
-	unsigned short minas;
-	//if (tab[i][j].mina == true) 
+	unsigned short minas = 0;
 	
     for(int a = i-1; a <= i+1; a++)
             for (int b = j-1; b <= j+1; b++)
-           //FALTA LO DE QUE SE CHOQUEN 
                 if (tab[a][b].mina == true && a >=0 && a <=7 && b >= 0 && b <= 7)
                     minas++;
 	
 	return minas;
 }
 
+/**
+ *
+ * Comprueba si una mina ha sido destapada.
+ *
+ * @param [in] tab tablero de celdas.
+ *
+ * @return si se ha destapado o no una mina.
+ *
+ */
 bool MinaAbierta(const Tablero tab) 
 {    
     unsigned int i, j;
@@ -448,11 +639,25 @@ bool MinaAbierta(const Tablero tab)
 	return boom;
 }
 
+/**
+ *
+ * Comprueba si todas las celdas se han abierto y se han fichado banderas en donde estan las minas correctamente.
+ *
+ * @param [in] tab tablero de celdas.
+ *
+ * @return si todas las celdas se han destapado sin abrir una mina.
+ *
+ */
 bool TodasCeldasProcesadas(const Tablero tab) 
 {
-    unsigned int i, j, m = 0, n = 0;
+    unsigned int i, j, m = 0, mT = 0, n = 0;
     bool all = false;
     
+    for(i = 0; i < FIL; i++)
+    	for(j = 0; j < COL; j++)
+    		if(tab[i][j].mina == true)
+    			mT++;
+	
     for(i = 0; i < FIL; i++)
     {
     	for(j = 0; j < COL; j++)
@@ -465,7 +670,7 @@ bool TodasCeldasProcesadas(const Tablero tab)
 		}
 	}
 	
-	if(m == 8 && n == 0)
+	if(m == mT && n == 0)
 		all = true;
 	
 	return all;
