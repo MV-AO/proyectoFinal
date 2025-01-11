@@ -4,3 +4,12 @@ elena
 juan
 12 3 1989
 10
+marcos
+8 5 1975
+5
+jose
+4 6 1582
+1
+sofia
+6 5 1201
+5

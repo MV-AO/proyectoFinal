@@ -113,12 +113,12 @@ void MenuEscribir();
 void InicializaDesdeFichero(Tablero tab, ifstream & f);
 void InicializaAleatoriamente(Tablero);
 void MuestraTablero(const Tablero);
-unsigned int NumeroMinasVecinas(const Tablero, int, int);
+unsigned int NumeroMinasVecinas(const Tablero, unsigned int, unsigned int);
 
 
 //funciones del juego
 void LeeCelda(unsigned int & fil, unsigned int & col);
-void AbreCelda(Tablero, int, int); 
+void AbreCelda(Tablero, unsigned int, unsigned int); 
 bool FinJuego(const Tablero);
 
 //funciones auxiliares
@@ -190,7 +190,7 @@ int main()
             tab[x][y].bandera = false;               
             break;
        }
-       system("CLS");
+      //system("CLS");
        MuestraTablero(tab); 
     } 
     while (FinJuego(tab) == false); 
@@ -416,7 +416,14 @@ void InicializaDesdeFichero(Tablero tab, ifstream & f)
 	for(i = 0; i < FIL; i++)
 		for(j = 0; j < COL; j++)
 			tab[i][j].nMinas = NumeroMinasVecinas(tab, i, j);
-			
+	
+	/*for(i = 0; i < FIL; i++)
+	{
+		for(j = 0; j < COL; j++)
+			cout << tab[i][j].nMinas << " ";		
+		cout << endl;
+	}*/
+	
 	f.close();
 	return;
 }
@@ -548,15 +555,15 @@ void LeeCelda(unsigned int & fil, unsigned int & col)
  *@param [in] j numero de columna en la que se encuentra la celda de referencia.
  *
  */    
-void AbreCelda(Tablero tab, int i, int j) 
+void AbreCelda(Tablero tab, unsigned int i, unsigned int j) 
 {
 	if(tab[i][j].destapada == false)
     tab[i][j].destapada = true;
 	  
     if(tab[i][j].nMinas == 0)
     {
-	    for(int a = i-1; a <= i+1; a++)
-            for (int b = j-1; b <= j+1; b++)
+	    for(int a = (int)i-1; a <= (int)i+1; a++)
+            for (int b = (int)j-1; b <= (int)j+1; b++)
                 if (tab[a][b].destapada == false && a >=0 && a <=7 && b >= 0 && b <= 7)
                     AbreCelda(tab, a, b);
 	}
@@ -601,12 +608,12 @@ bool FinJuego(const Tablero tab)
  * @return la cantidad de minas a su alrededor.
  *
  */
-unsigned int NumeroMinasVecinas(const Tablero tab, int i, int j) 
+unsigned int NumeroMinasVecinas(const Tablero tab, unsigned int i, unsigned int j) 
 {
 	unsigned short minas = 0;
 	
-    for(int a = i-1; a <= i+1; a++)
-            for (int b = j-1; b <= j+1; b++)
+    for(int a = (int)i-1; a <= (int)i+1; a++)
+            for (int b = (int)j-1; b <= (int)j+1; b++)
                 if (tab[a][b].mina == true && a >=0 && a <=7 && b >= 0 && b <= 7)
                     minas++;
 	
