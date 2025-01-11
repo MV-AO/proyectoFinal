@@ -205,18 +205,25 @@ int main()
 
     if (TodasCeldasProcesadas(tab) == true ) 
 	{ 
-       cout << "Nombre del fichero para leer la informacion jugadores?: " << endl;
-       cin >> fichNombre;
-
-       f.open(fichNombre.c_str());
-	   if (!f)
-          cerr << "Error.  No se puede abrir para lectura." << endl;
-       else 
-       {
-          LeeJugadoresFichero(v, tam, f);
-          cout << "El fichero contiene actualmente " << tam << " jugadores." << endl;
-          f.close();
-       }
+		do
+		{
+	       cout << "Nombre del fichero para leer la informacion jugadores?: " << endl;
+	       cin >> fichNombre;
+	
+	       f.open(fichNombre.c_str());
+		   if (!f)
+		   {
+			  system("CLS");
+	          cout << "Error.  No se puede abrir para lectura." << endl;
+		   }
+	       else 
+	       {
+	          LeeJugadoresFichero(v, tam, f);
+	          cout << "El fichero contiene actualmente " << tam << " jugadores." << endl;
+	          f.close();
+	       }
+	       
+		}while(!f);
        
       p = LeeInfoJugador(nIntentos);
        
@@ -225,17 +232,23 @@ int main()
       else 
          cout << "Jugador insertado correctamente." << endl;
        
-      cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
-      cin >> fichNombre;
-	  fOut.open(fichNombre.c_str());
-      
-      if (fOut.fail())
-        cerr << "Error. No se puede abrir el fichero para escritura." << endl;
-      else 
-      {
-           EscribeJugadoresFichero(v, tam, fOut);
-           fOut.close();
-      }   
+       do
+       {
+	      cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
+	      cin >> fichNombre;
+		  fOut.open(fichNombre.c_str());
+	      
+	      if (fOut.fail())
+	      {
+			  system("CLS");
+	        cout << "Error. No se puede abrir el fichero para escritura." << endl;
+		  }
+	      else 
+	      {
+	           EscribeJugadoresFichero(v, tam, fOut);
+	           fOut.close();
+	      }   
+	   }while(fOut.fail());
    }
 
    return 0;
