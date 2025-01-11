@@ -190,7 +190,7 @@ int main()
             tab[x][y].bandera = false;               
             break;
        }
-      //system("CLS");
+       system("CLS");
        MuestraTablero(tab); 
     } 
     while (FinJuego(tab) == false); 
