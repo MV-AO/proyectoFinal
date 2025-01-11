@@ -13,13 +13,14 @@ const int COL = 8;
 //info de los jugadores
 struct Fecha 
 {
-	// completar
+	unsigned short dia, mes, anyo;
 };
 
 struct Jugador
 {
-   //completar
-            
+   string nombre;
+   unsigned int PartidasJugadas;
+              
 };
 
 const int MAX_JUGADORES = 100;
@@ -38,22 +39,20 @@ typedef Estado Tablero[FIL][COL];
 
 char Menu();
 void MenuEscribir();
-//funciones de inicializacion
-void InicializaDesdeFichero(Tablero, ifstream &);
+void InicializaDesdeFichero(Tablero tab, ifstream & f);
 void InicializaAleatoriamente(Tablero);
-
-//funciones para mostrar el tablero actual del juego
 void MuestraTablero(const Tablero);
-unsigned int NumeroMinasVecinas(const Tablero, unsigned int, unsigned int);
+unsigned int NumeroMinasVecinas(const Tablero, int, int);
+
 
 //funciones del juego
-void LeeCelda(unsigned int &, unsigned int &);
-void AbreCelda(Tablero, unsigned int,unsigned nt); 
+void LeeCelda(unsigned int & fil, unsigned int & col);
+void AbreCelda(Tablero, int, int); 
 bool FinJuego(const Tablero);
 
 //funciones auxiliares
-bool MinaAbierta(const Tablero);
-bool TodasCeldasProcesadas(const Tablero);
+bool MinaAbierta(const Tablero tab);
+bool TodasCeldasProcesadas(const Tablero tab);
 
 //funciones del jugador
 Jugador LeeInfoJugador(unsigned int);
@@ -66,7 +65,7 @@ int main()
 {   
     char op; //opcion del menu
     Tablero tab;
-
+	
     ifstream fIn, f; 
     ofstream fOut;
  
@@ -92,7 +91,7 @@ int main()
                 cout << "Error. Fichero no encontrado." << endl;
           	 else 
              {
-            	   InicializaDesdeFichero (tab, fIn); 
+            	InicializaDesdeFichero (tab, fIn); 
                 fIn.close();
              }
           	  break;
@@ -190,7 +189,7 @@ Jugador LeeInfoJugador(unsigned int n)
 
 void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f) 
 {
-   getline(f, vec[t].nombre);
+    getline(f, vec[t].nombre);
    f >> vec[t].nac.dia;
    f >> vec[t].nac.mes;
    f >> vec[t].nac.anyo;
@@ -211,13 +210,12 @@ void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f)
   		t++;
    }
 
-   
-   return;
+   return; 
 }
 
 bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t) 
 {
-	bool bien = true;
+   	bool bien = true;
 	
 	if(t > MAX_JUGADORES)
 		bien = false;
@@ -237,56 +235,178 @@ bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t)
 
 void EscribeJugadoresFichero(const Vector vec, unsigned int t, ofstream & f) 
 {
-	for(unsigned int i = 0; i < t; i++)
+    for(unsigned int i = 0; i < t; i++)
 	{
 		f << vec[i].nombre << endl;
 		f << vec[i].nac.dia << " " << vec[i].nac.mes << " " << vec[i].nac.anyo << endl;
    		f << vec[i].PartidasJugadas << endl;
 	}
 	
-   return;       
+   return;    
 }
 
 /****** Funcion Menu ***********/
 char Menu() 
 {
- 	// completar
+	char op;
+	do
+	{
+		cout << "a. Lee las posiciones de las minas desde fichero." << endl;
+		cout << "b. Genera aleatoriamente las posiciones de las minas." << endl;
+		cout << "c. Descubre celda." << endl;
+		cout << "d. Marca celda como una mina. Añade una bandera." << endl;
+		cout << "e. Desmarca celda como una mina." << endl;
+		cout << "Escoge una opción del menú: ";
+		cin >>	op;
+		
+		if(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e')
+			cout << "Ingresa otro carácter valido." << endl;
+	}
+	while(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e');
+	
+	return op;
 }
 
 /******* Funciones de Inicializacion *******/
 void InicializaDesdeFichero(Tablero tab, ifstream & f) 
-{   
-    // completar
+{
+	unsigned int i, j;
+	for(i = 0; i < FIL; i++)
+		for(j = 0; j < COL; j++)
+		{
+			tab[i][j].mina = false;
+			tab[i][j].destapada = false;
+			tab[i][j].bandera = false;
+		}
+	do
+	{
+		f >> i;
+		f >> j;
+		tab[i][j].mina = true;
+	}
+	while(!f.eof());
+	
+	for(i = 0; i < FIL; i++)
+	{
+		for(j = 0; j < COL; j++)
+		{
+			tab[i][j].nMinas = NumeroMinasVecinas(tab, i, j);
+			cout << tab[i][j].nMinas << " ";
+		}
+		cout << endl;
+	}
+	
+	f.close();
+	return;
 }
+	
 
 void InicializaAleatoriamente(Tablero tab) 
 {
-  // completar
+	unsigned int x, y;
+	srand(time(NULL)); 
+	
+    for(unsigned int i = 0; i < MAX_MINAS; i++)
+    {
+		do
+   		{
+	        x = rand() % FIL;      
+	        y = rand() % COL;
+		}
+		while(tab[x][y].mina == true);
+		
+		tab[x][y].mina = true;
+	}
+	return;	
 }
 
 
-/************** Mostrar Tablero *****************/
 void MuestraTablero(const Tablero tab) 
 {
-    // completar  
-} 
+	for(int i = -1; i < FIL; i++)
+	{
+		if(i >= 0)
+			cout << i+1;
+		else
+			cout << " ";
+		
+		for(unsigned int j = 0; j < COL; j++)
+		{
+			if(i == -1)
+				cout << "| " << j + 1 << " ";
+			else
+			{
+				cout << "|";
+				if (tab[i][j].destapada == true)
+					{
+					if (tab[i][j].mina == true)
+						cout << " # ";
+					else if (tab[i][j].nMinas == 0)
+						cout <<  "   ";
+					else
+						cout << " " << tab[i][j].nMinas << " ";
+					}
+				else if (tab[i][j].bandera == true)
+					cout << " ^ ";
+				else
+					cout << " . ";
+					
+			}
+		}
+				cout << "|";
+		
+		cout << endl;
+		cout << "----------------------------------" << endl;
+	}
+		
+	return;
+	
+}
 
 /*********** Funciones del Juego **********/
 void LeeCelda(unsigned int & fil, unsigned int & col)
-{
-   // completar 
+{	
+	do
+	{
+	   cout << "Coloque la posición de la celda." << endl << "Fila: ";
+	   cin >> fil;
+	   cout << "Columna: ";
+	   cin >> col;   
+	   
+	   if(fil < 1 || fil > FIL || col < 1 || col > COL)
+	   	cout << "Posicion erronea, introduzca una valida." << endl;
+	   	
+	}while(fil < 1 || fil > FIL || col < 1 || col > COL);
+	
+	fil--;
+	col--;
+	
+	return;
 }
             
-void AbreCelda(Tablero tab, unsigned int i, unsigned int j) 
+void AbreCelda(Tablero tab, int i, int j) 
 {
-	unsigned int f, c;
+	if(tab[i][j].destapada == false)
+    tab[i][j].destapada = true;
+	  
+    if(tab[i][j].nMinas == 0)
+    {
+	    for(int a = i-1; a <= i+1; a++)
+            for (int b = j-1; b <= j+1; b++)
+                if (tab[a][b].destapada == false && a >=0 && a <=7 && b >= 0 && b <= 7)
+                    AbreCelda(tab, a, b);
+	}
+	else
+		if(tab[i][j].destapada == false && tab[i][j].mina == false)
+	        tab[i][j].destapada = true;
 	
 	
+	return;   
 }
 
 bool FinJuego(const Tablero tab) 
 {
-   bool finM, finA, end = false;
+    bool finM, finA, end = false;
    
    finM = MinaAbierta(tab);
    finA = TodasCeldasProcesadas(tab);
@@ -297,9 +417,18 @@ bool FinJuego(const Tablero tab)
 	return end;
 }
 
-unsigned int NumeroMinasVecinas(const Tablero tab, unsigned int i, unsigned int j) 
+unsigned int NumeroMinasVecinas(const Tablero tab, int i, int j) 
 {
-	// completar
+	unsigned short minas;
+	//if (tab[i][j].mina == true) 
+	
+    for(int a = i-1; a <= i+1; a++)
+            for (int b = j-1; b <= j+1; b++)
+           //FALTA LO DE QUE SE CHOQUEN 
+                if (tab[a][b].mina == true && a >=0 && a <=7 && b >= 0 && b <= 7)
+                    minas++;
+	
+	return minas;
 }
 
 bool MinaAbierta(const Tablero tab) 
