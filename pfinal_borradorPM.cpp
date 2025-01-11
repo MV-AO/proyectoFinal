@@ -417,13 +417,6 @@ void InicializaDesdeFichero(Tablero tab, ifstream & f)
 		for(j = 0; j < COL; j++)
 			tab[i][j].nMinas = NumeroMinasVecinas(tab, i, j);
 	
-	/*for(i = 0; i < FIL; i++)
-	{
-		for(j = 0; j < COL; j++)
-			cout << tab[i][j].nMinas << " ";		
-		cout << endl;
-	}*/
-	
 	f.close();
 	return;
 }
