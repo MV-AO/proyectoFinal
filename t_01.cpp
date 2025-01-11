@@ -44,7 +44,7 @@ const int COL = 8;
 struct Fecha 
 {
 	unsigned short dia, mes anyo;
-};
+}
 
 /** 
  * 
@@ -62,10 +62,9 @@ struct Fecha
  */
 struct Jugador
 {
-   string nom;
-   Fecha nac;
-   unsigned int jugadas; //, intentos; NO se si va esto o no
-};
+	string nombre;
+	unsigned int PartidasJugadas;
+}
 
 const int MAX_JUGADORES = 100;
 
@@ -109,7 +108,23 @@ typedef Estado Tablero[FIL][COL];
 
 
 char Menu();
-//funciones de inicializacion
+{
+	char op;
+	MenuEscribir();
+	cout << "Escoge una opción del menú: ";
+	cin >> 	op;
+	
+	return op;
+}
+void MenuEscribir()
+{
+	cout << "a. Lee las posiciones de las minas desde fichero." << endl;
+	cout << "b. Genera aleatoriamente las posiciones de las minas." << endl;
+	cout << "c. Descubre celda." << endl;
+	cout << "d. Marca celda como una mina. Añade una bandera." << endl;
+	cout << "e. Desmarca celda como una mina." << endl;
+}
+
 void InicializaDesdeFichero(Tablero, ifstream &);
 void InicializaAleatoriamente(Tablero);
 
@@ -135,7 +150,7 @@ void EscribeJugadoresFichero(const Vector, unsigned int, ofstream &);
   
 int main() 
 {   
-    char op; //opcion del menu
+    char op = Menu();
     Tablero tab;
 
     ifstream fIn, f; 
