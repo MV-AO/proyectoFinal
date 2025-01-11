@@ -170,59 +170,66 @@ int main()
 // Funciones del Jugador
 Jugador LeeInfoJugador(unsigned int n)
 {      
-  	Jugador p;
+	Jugador p;
 	
+	cin.ignore();
   	cout << "Por favor ingrese sus datos." << endl;
   	cout << "Nombre: " << endl;
-  	getline(cin, p.nom);
-  	cout << "Fecha de nacimiento: " << endl;
-  	cin >> p.nac.dia >> p.nac.mes >> p.nac.anyo;
+  	getline(cin, p.nombre);
+  	cout << "Fecha de nacimiento." << endl;
+  	cout << "Dia: ";
+  	cin >> p.nac.dia;
+  	cout << "Mes: ";
+  	cin >> p.nac.mes;
+  	cout << "Anyo: ";
+  	cin >> p.nac.anyo;
   	
-  	p.jugadas = n;
-  	
+  	p.PartidasJugadas = n;
   	return p;
 }   
 
 void LeeJugadoresFichero(Vector vec, unsigned int &t, ifstream & f) 
 {
-    //Verificar si t siempre es  al llamar la función o empieza siendo > 0.
-   
-   getline(f, vec[t].nom);
+   getline(f, vec[t].nombre);
    f >> vec[t].nac.dia;
    f >> vec[t].nac.mes;
    f >> vec[t].nac.anyo;
-   f >> vec[t].jugadas;
+   f >> vec[t].PartidasJugadas;
+   f.ignore();
    
    t++;
    
-   while(!f.eof())
+   while(f.good())
    {
-   		getline(f, vec[t].nom);
+   		getline(f, vec[t].nombre);
    		f >> vec[t].nac.dia;
   		f >> vec[t].nac.mes;
    		f >> vec[t].nac.anyo;
-   		f >> vec[t].jugadas;
+   		f >> vec[t].PartidasJugadas;
+	    f.ignore();
    
   		t++;
    }
+
    
    return;
 }
 
 bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t) 
 {
-   	bool bien = true;
-	t++;
+	bool bien = true;
 	
 	if(t > MAX_JUGADORES)
 		bien = false;
 	else
 	{
-		vec[t].nom = a.nom;
+		vec[t].nombre = a.nombre;
    		vec[t].nac.dia = a.nac.dia;
    		vec[t].nac.mes = a.nac.mes;
    		vec[t].nac.anyo = a.nac.anyo;
-   		vec[t].jugadas = a.jugadas;
+   		vec[t].PartidasJugadas = a.PartidasJugadas;
+		
+		t++;
 	}
    	
    	return bien;  
@@ -230,14 +237,14 @@ bool InsertaJugadorVector(Jugador a, Vector vec, unsigned int & t)
 
 void EscribeJugadoresFichero(const Vector vec, unsigned int t, ofstream & f) 
 {
-    	for(unsigned int i = 0; i < t; i++)
+	for(unsigned int i = 0; i < t; i++)
 	{
-		f << vec[0].nom << endl;
-		f << vec[0].nac.dia << " " << vec[0].nac.mes << " " << vec[0].nac.anyo << endl;
-   		f << vec[0].jugadas << endl;
+		f << vec[i].nombre << endl;
+		f << vec[i].nac.dia << " " << vec[i].nac.mes << " " << vec[i].nac.anyo << endl;
+   		f << vec[i].PartidasJugadas << endl;
 	}
 	
-   return;      
+   return;       
 }
 
 /****** Funcion Menu ***********/
