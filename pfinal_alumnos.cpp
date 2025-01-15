@@ -1,3 +1,20 @@
+/**
+ *
+ * @file pfinal_borradorPM.cpp
+ *
+ * @brief 
+ *
+ * Juego de las minas.
+ * 
+ *
+ * @version 1.0
+ * @author Maria Victoria Albino Oviedo
+ * @author Paula Pantoja
+ * @date 11-01-2025
+ *
+ * @copyright Universidad de Valencia
+ */
+
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>   
@@ -11,21 +28,69 @@ const int FIL = 8;
 const int COL = 8;
 
 //info de los jugadores
+/** 
+ * 
+ * @struct Fecha
+ * Registro para guardar la información de una Fecha
+ *
+ * @var Fecha::dia
+ * Almacena el dia
+ * @var Fecha::mes
+ * Almacena el mes
+ * @var Fecha::anyo
+ * Almacena el año
+ */
 struct Fecha 
 {
 	unsigned short dia, mes, anyo;
 };
 
+/** 
+ * 
+ * @struct Jugador
+ * Registro para guardar la información de un jugador.
+ *
+ * @var Jugador::nombre
+ * Almacena el nombre del jugador.
+ * @var Jugador::nac
+ * Almacena la fecha de nacimiento del jugador con un formato de dd/mm/aaaa.
+ * @var Jugador::PartidasJugadas
+ * Almacena el numero de PartidasJugadas realizadas.
+ * @var Jugador::intentos
+ * Almacena el numero de intentos disponibles.
+ */
 struct Jugador
 {
    string nombre;
+   Fecha nac;
    unsigned int PartidasJugadas;
               
 };
 
 const int MAX_JUGADORES = 100;
+
+/**
+*
+* @brief Definicion de tipo de dato Vector de tamaño 100 elementos de tipo Jugador.
+*
+* @typedef Vector
+*/
 typedef Jugador Vector[MAX_JUGADORES];
 
+/** 
+ * 
+ * @struct Estado
+ * Registro para guardar la información de una celda.
+ *
+ * @var Estado::nMinas
+ * Almacena el numero de bombas vecinas.
+ * @var Estado::mina
+ * Comprueba si existe una mina en esa celda.
+ * @var Estado::destapada
+ * Comprueba si la celda está descubierta ya o no.
+ * @var Estado::bandera
+ * Comprueba si la celda está marcada con una bandera o no.
+ */
 struct Estado
 {
 	unsigned int nMinas; // numero de bombas vecinas
@@ -34,12 +99,18 @@ struct Estado
 	bool bandera; //la celda está marcada con una bandera o no
 };
 
+/**
+*
+* @brief Definicion de tipo de dato Tablero de tamaño 8x8 elementos de tipo Estado.
+*
+* @typedef Tablero
+*/
 typedef Estado Tablero[FIL][COL];
 
 
 char Menu();
 void MenuEscribir();
-void InicializaDesdeFichero(Tablero, ifstream &);
+void InicializaDesdeFichero(Tablero tab, ifstream & f);
 void InicializaAleatoriamente(Tablero);
 void MuestraTablero(const Tablero);
 unsigned int NumeroMinasVecinas(const Tablero, unsigned int, unsigned int);
@@ -47,7 +118,7 @@ unsigned int NumeroMinasVecinas(const Tablero, unsigned int, unsigned int);
 
 //funciones del juego
 void LeeCelda(unsigned int & fil, unsigned int & col);
-void AbreCelda(Tablero, unsigned int,unsigned nt); 
+void AbreCelda(Tablero, unsigned int, unsigned int); 
 bool FinJuego(const Tablero);
 
 //funciones auxiliares
