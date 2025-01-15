@@ -107,6 +107,7 @@ struct Estado
 */
 typedef Estado Tablero[FIL][COL];
 
+void a(Tablero);
 
 char Menu();
 void MenuEscribir();
@@ -155,7 +156,9 @@ int main()
        switch (op) 
        { 
     
-         case 'a': 
+         case 'a':
+		 	do
+			{
         	   cout << "Nombre del fichero con las posiciones de las minas?: " << endl;
         	   cin >> fichNombre;
         	   cout << endl;
@@ -163,11 +166,10 @@ int main()
         	   
              if (fIn.fail())
                 cout << "Error. Fichero no encontrado." << endl;
-          	 else 
-             {
-            	InicializaDesdeFichero (tab, fIn); 
-                fIn.close();
-             }
+			}while(fIn.fail()); 
+			
+        	InicializaDesdeFichero (tab, fIn); 
+            fIn.close();
           	  break;
 
          case 'b': 
@@ -189,6 +191,9 @@ int main()
             LeeCelda(x,y);
             tab[x][y].bandera = false;               
             break;
+        case 'f':
+        	a(tab);
+        	break;
        }
        system("CLS");
        MuestraTablero(tab); 
@@ -212,43 +217,31 @@ int main()
 	
 	       f.open(fichNombre.c_str());
 		   if (!f)
-		   {
-			  system("CLS");
 	          cout << "Error.  No se puede abrir para lectura." << endl;
-		   }
-	       else 
-	       {
-	          LeeJugadoresFichero(v, tam, f);
-	          cout << "El fichero contiene actualmente " << tam << " jugadores." << endl;
-	          f.close();
-	       }
-	       
 		}while(!f);
+		
+		LeeJugadoresFichero(v, tam, f);
+		cout << "El fichero contiene actualmente " << tam << " jugadores." << endl;
+		f.close();
        
-      p = LeeInfoJugador(nIntentos);
-       
-      if (InsertaJugadorVector(p, v, tam) == false)
-         cout << "No suficiente memoria para insertar el jugador." << endl;
-      else 
-         cout << "Jugador insertado correctamente." << endl;
-       
-       do
-       {
-	      cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
-	      cin >> fichNombre;
-		  fOut.open(fichNombre.c_str());
-	      
-	      if (fOut.fail())
-	      {
-			  system("CLS");
-	        cout << "Error. No se puede abrir el fichero para escritura." << endl;
-		  }
-	      else 
-	      {
-	           EscribeJugadoresFichero(v, tam, fOut);
-	           fOut.close();
-	      }   
-	   }while(fOut.fail());
+		p = LeeInfoJugador(nIntentos);
+		
+		if (InsertaJugadorVector(p, v, tam) == false)
+		 cout << "No suficiente memoria para insertar el jugador." << endl;
+		else 
+		 cout << "Jugador insertado correctamente." << endl;
+		
+		cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
+		cin >> fichNombre;
+		fOut.open(fichNombre.c_str());
+		
+		if (fOut.fail())
+			cout << "Error. No se puede abrir el fichero para escritura." << endl;
+		else 
+		{
+		   EscribeJugadoresFichero(v, tam, fOut);
+		   fOut.close();
+		}   
    }
    
    system("PAUSE");
@@ -392,10 +385,10 @@ char Menu()
 		cin >>	op;
 		cout << endl;
 		
-		if(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e')
+		if(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e' && op != 'f')
 			cout << "Ingresa otro caracter valido." << endl;
 	}
-	while(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e');
+	while(op != 'a' && op != 'b' && op != 'c' && op != 'd' && op != 'e' && op != 'f');
 	
 	return op;
 }
@@ -688,4 +681,22 @@ bool TodasCeldasProcesadas(const Tablero tab)
 		all = true;
 	
 	return all;
+}
+
+void a(Tablero tab) 
+{    
+    unsigned int i, j;
+    
+    for(i = 0; i < FIL; i++)
+    {
+    	for(j = 0; j < COL; j++)
+    	{
+    		if(tab[i][j].mina == true)
+    			tab[i][j].bandera = true;
+    		if(tab[i][j].mina == false)
+    			tab[i][j].destapada = true;
+		}
+	}
+	
+	return;
 }
