@@ -8,7 +8,7 @@ using namespace std;
 //info del juego
 const int MAX_MINAS = 8; 
 const int FIL = 8;
-const int COL = 8;
+
 
 //info de los jugadores
 struct Fecha 
