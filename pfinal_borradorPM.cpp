@@ -135,7 +135,7 @@ void EscribeJugadoresFichero(const Vector, unsigned int, ofstream &);
   
 int main() 
 {   
-    char op; //opcion del menu
+    char op, next; //opcion del menu
     Tablero tab;
 	
     ifstream fIn, f; 
@@ -148,101 +148,117 @@ int main()
     unsigned int tam = 0; //numero de elementos rellenados del vector
     string fichNombre;
     
-    cout << "Bienvenido al juego del buscaminas. " << endl;
-    
-    do 
+    do
     {
-       op = Menu();
-       switch (op) 
-       { 
-    
-         case 'a':
-		 	do
-			{
-        	   cout << "Nombre del fichero con las posiciones de las minas?: " << endl;
-        	   cin >> fichNombre;
-        	   cout << endl;
-			   fIn.open(fichNombre.c_str());
-        	   
-             if (fIn.fail())
-                cout << "Error. Fichero no encontrado." << endl;
-			}while(fIn.fail()); 
-			
-        	InicializaDesdeFichero (tab, fIn); 
-            fIn.close();
-          	  break;
-
-         case 'b': 
-            InicializaAleatoriamente(tab); 
-            break; 
-
-         case 'c':
-            LeeCelda(x,y);
-            AbreCelda(tab, x, y); 
-            nIntentos++; 
-            break;
-
-         case 'd':
-            LeeCelda(x,y);
-            tab[x][y].bandera = true;                 
-            break;
-
-         case 'e':
-            LeeCelda(x,y);
-            tab[x][y].bandera = false;               
-            break;
-        case 'f':
-        	a(tab);
-        	break;
-       }
-       system("CLS");
-       MuestraTablero(tab); 
-    } 
-    while (FinJuego(tab) == false); 
-    
-  
-    if  (MinaAbierta(tab) == true)
-       cout << endl << "Fin del Juego. Una mina ha explotado!" << endl;
-    else 
-       cout << endl << "Fin del Juego. Victoria!" << endl; 
-
-    cout << "Numero de Intentos: " << nIntentos << endl;
-
-    if (TodasCeldasProcesadas(tab) == true ) 
-	{ 
-		do
-		{
-	       cout << "Nombre del fichero para leer la informacion jugadores?: " << endl;
-	       cin >> fichNombre;
+	    cout << "Bienvenido al juego del buscaminas. " << endl;
+	    
+	    do 
+	    {
+	       op = Menu();
+	       switch (op) 
+	       { 
+	    
+	         case 'a':
+			 	do
+				{
+	        	   cout << "Nombre del fichero con las posiciones de las minas?: " << endl;
+	        	   cin >> fichNombre;
+	        	   cout << endl;
+				   fIn.open(fichNombre.c_str());
+	        	   
+	             if (fIn.fail())
+	                cout << "Error. Fichero no encontrado." << endl;
+				}while(fIn.fail()); 
+				
+	        	InicializaDesdeFichero (tab, fIn); 
+	            fIn.close();
+	          	  break;
 	
-	       f.open(fichNombre.c_str());
-		   if (!f)
-	          cout << "Error.  No se puede abrir para lectura." << endl;
-		}while(!f);
+	         case 'b': 
+	            InicializaAleatoriamente(tab); 
+	            break; 
+	
+	         case 'c':
+	            LeeCelda(x,y);
+	            AbreCelda(tab, x, y); 
+	            nIntentos++; 
+	            break;
+	
+	         case 'd':
+	            LeeCelda(x,y);
+	            tab[x][y].bandera = true;                 
+	            break;
+	
+	         case 'e':
+	            LeeCelda(x,y);
+	            tab[x][y].bandera = false;               
+	            break;
+	        case 'f':
+	        	a(tab);
+	        	break;
+	       }
+	       system("CLS");
+	       MuestraTablero(tab); 
+	    } 
+	    while (FinJuego(tab) == false); 
+	    
+	  
+	    if  (MinaAbierta(tab) == true)
+	       cout << endl << "Fin del Juego. Una mina ha explotado!" << endl;
+	    else 
+	       cout << endl << "Fin del Juego. Victoria!" << endl; 
+	
+	    cout << "Numero de Intentos: " << nIntentos << endl;
+	
+	    if (TodasCeldasProcesadas(tab) == true ) 
+		{ 
+			do
+			{
+		       cout << "Nombre del fichero para leer la informacion jugadores?: " << endl;
+		       cin >> fichNombre;
 		
-		LeeJugadoresFichero(v, tam, f);
-		cout << "El fichero contiene actualmente " << tam << " jugadores." << endl;
-		f.close();
-       
-		p = LeeInfoJugador(nIntentos);
-		
-		if (InsertaJugadorVector(p, v, tam) == false)
-		 cout << "No suficiente memoria para insertar el jugador." << endl;
-		else 
-		 cout << "Jugador insertado correctamente." << endl;
-		
-		cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
-		cin >> fichNombre;
-		fOut.open(fichNombre.c_str());
-		
-		if (fOut.fail())
-			cout << "Error. No se puede abrir el fichero para escritura." << endl;
-		else 
-		{
-		   EscribeJugadoresFichero(v, tam, fOut);
-		   fOut.close();
-		}   
-   }
+		       f.open(fichNombre.c_str());
+			   if (!f)
+		          cout << "Error.  No se puede abrir para lectura." << endl;
+			}while(!f);
+			
+			LeeJugadoresFichero(v, tam, f);
+			cout << "El fichero contiene actualmente " << tam << " jugadores." << endl;
+			f.close();
+	       
+			p = LeeInfoJugador(nIntentos);
+			
+			if (InsertaJugadorVector(p, v, tam) == false)
+			 cout << "No suficiente memoria para insertar el jugador." << endl;
+			else 
+			 cout << "Jugador insertado correctamente." << endl;
+			
+			cout << "Nombre del fichero para guardar la informacion jugadores?: " << endl; 
+			cin >> fichNombre;
+			fOut.open(fichNombre.c_str());
+			
+			if (fOut.fail())
+				cout << "Error. No se puede abrir el fichero para escritura." << endl;
+			else 
+			{
+			   EscribeJugadoresFichero(v, tam, fOut);
+			   fOut.close();
+			}   
+	   }
+	   
+	   do
+	   {
+		   cout << endl << "Quiere volver a jugar? Coloque una 's' para si y una 'n' para no." << endl;
+		   cin >> next;
+		   
+		   if(next != 's' && next != 'n') 
+		   	cout << "Por favor, escoga una opcion correcta.";
+			else if(next == 's')
+				system("CLS");
+		   
+	   }while(next != 's' && next != 'n');
+	   
+	}while(next == 's');
    
    system("PAUSE");
    return 0;
